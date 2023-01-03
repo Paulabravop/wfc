@@ -96,11 +96,13 @@ const reglas =[
   LEFT:1,
 },
 ];
+
 function preload(){
   for (let i = 0; i < NA; i++){
     azulejos[i] = loadImage(`azulejos/tile${i}.png`);
   }
 }
+
 function setup() {
   createCanvas(1080, 1080);
 
@@ -118,8 +120,9 @@ function setup() {
     };
   }
 }
+
 function draw() {
-  background(111);
+  //background(111);
   const celdasDisponibles = celdas.filter((celda) =>{ 
   return celda.colapsada == false; 
   });
@@ -172,7 +175,7 @@ function draw() {
           }
 //Monitorear Right
           if( x < RETICULA - 1 ){
-            const indiceRIGHT= x + 1 + y * RETICULA ;
+            const indiceRIGHT= (x + 1) + y * RETICULA ;
             const celdaRIGHT = celdas[indiceRIGHT];
             if(!celdaRIGHT.colapsada){
 
@@ -230,7 +233,7 @@ function draw() {
 
 
 function cambiarEntropia(_celda, _regla, _opuesta){
-  const nuevasOpciones = []
+  const nuevasOpciones = [];
   for(let i= 0 ; i < _celda.opciones.length; i++){
    if(_regla == reglas[_celda.opciones[i]][_opuesta]) {
     const celdaCompatible = _celda.opciones[i];
@@ -238,6 +241,6 @@ function cambiarEntropia(_celda, _regla, _opuesta){
   }
 }
 _celda.opciones = nuevasOpciones;
-print(nuevasOpciones);
+
 }
 
