@@ -1,8 +1,9 @@
 const celdas = [];  
-const RETICULA= 4;
+const RETICULA = 4;
 
 const azulejos =[];
 const NA = 12; //numero de azulejos
+let opcionesI = [];
 
 let ancho;  //ancho de celdas
 let alto; //altura de celdas
@@ -96,7 +97,7 @@ const reglas =[
 },
 ];
 function preload(){
-  for(let i = 0; i < NA; i++){
+  for (let i = 0; i < NA; i++){
     azulejos[i] = loadImage(`azulejos/tile${i}.png`);
   }
 }
@@ -106,8 +107,6 @@ function setup() {
   ancho = width / RETICULA;
   alto = height / RETICULA;
 
-  let opcionesI =[]
-
   for(let i = 0; i < azulejos.length; i++){
     opcionesI.push(i);
   }
@@ -116,12 +115,11 @@ function setup() {
     celdas[i] = {
       colapsada: false,
       opciones: opcionesI,
-    }
+    };
   }
-
 }
 function draw() {
-  //background(111);
+  background(111);
   const celdasDisponibles = celdas.filter((celda) =>{ 
   return celda.colapsada == false; 
   });
@@ -155,7 +153,7 @@ function draw() {
          // print(reglasActuales);
           image (
           azulejos[indiceDeAzulejo],
-           x * ancho,
+           x * ancho,  
            y * alto,
            ancho,
            alto
@@ -165,22 +163,11 @@ function draw() {
             const indiceUP = x + (y-1) * RETICULA ; 
             const celdaUP = celdas[indiceUP];
             if(!celdaUP.colapsada){
-              const nuevasOpciones = []
-              for(let i= 0 ; i < celdaUP.opciones.length; i++){
-                if(
-                  reglasActuales['UP']= 
-                  reglas[celdaUP.opciones[i]]['DOWN']
-                  ) {
-                                
-
-                const celdaCompatible = celdaUP.opciones[i]
-                nuevasOpciones.push(celdaCompatible);
-                  }
-                celdaUP.opciones = nuevasOpciones;
-                print(nuevasOpciones);
-            
-            }
-            
+              cambiarEntropia(
+                celdaUP,
+                reglasActuales['UP'],
+                'DOWN'
+                );
             }
           }
 //Monitorear Right
@@ -189,6 +176,11 @@ function draw() {
             const celdaRIGHT = celdas[indiceRIGHT];
             if(!celdaRIGHT.colapsada){
 
+              cambiarEntropia(
+                celdaRIGHT,
+                reglasActuales['RIGHT'],
+                'LEFT'
+                );
             }
           }
 //Monitorear Down
@@ -196,7 +188,11 @@ function draw() {
             const indiceDOWN= x + (y + 1) * RETICULA ;
             const celdaDOWN = celdas[indiceDOWN];
             if(!celdaDOWN.colapsada){
-
+              cambiarEntropia(
+                celdaDOWN,
+                reglasActuales['DOWN'],
+                'UP'
+                );
             }
 
           }
@@ -205,15 +201,43 @@ function draw() {
             const indiceLEFT= x - 1 + y * RETICULA ;
             const celdaLEFT = celdas[indiceLEFT];
             if(!celdaLEFT.colapsada){
-
+              cambiarEntropia(
+                celdaLEFT,
+                reglasActuales['LEFT'],
+                'RIGHT'
+                );
             }
-          } else{
-            strokeWeight(6);
-            rect(x * ancho, y * alto, ancho, alto);
-            }
-          }
+          } 
+        }else{
+            //strokeWeight(6);
+            //rect(x * ancho, y * alto, ancho, alto);
+          } 
         }
       }
-      noLoop();
-    }
+      }
+     // noLoop();
+    
+  }//Aqui deberia haber un else
+    {
+
+  for(let i = 0; i < RETICULA * RETICULA; i ++){
+    celdas[i] = {
+      colapsada: false,
+      opciones: opcionesI,
+    };
   }
+}
+
+
+function cambiarEntropia(_celda, _regla, _opuesta){
+  const nuevasOpciones = []
+  for(let i= 0 ; i < _celda.opciones.length; i++){
+   if(_regla == reglas[_celda.opciones[i]][_opuesta]) {
+    const celdaCompatible = _celda.opciones[i];
+    nuevasOpciones.push(celdaCompatible);
+  }
+}
+_celda.opciones = nuevasOpciones;
+print(nuevasOpciones);
+}
+
