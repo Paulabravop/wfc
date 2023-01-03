@@ -121,10 +121,11 @@ function setup() {
 
 }
 function draw() {
-  background(111);
+  //background(111);
   const celdasDisponibles = celdas.filter((celda) =>{ 
   return celda.colapsada == false; 
   });
+  
 
   if(celdasDisponibles.length > 0){
     celdasDisponibles.sort((a, b) =>{
@@ -142,16 +143,74 @@ function draw() {
 
     const opcionSeleccionada = random(celdaSeleccionada.opciones);
     celdaSeleccionada.opciones = [opcionSeleccionada];
-
+  //print(celdaSeleccionada);
     
     for(let x = 0; x < RETICULA; x++){
       for(let y = 0; y < RETICULA; y++){
         const celdaIndex = x + y * RETICULA;
         const celdaActual = celdas[celdaIndex];
         if(celdaActual.colapsada){
-           
-          image (azulejos[celdaActual.opciones[0]], x, y);
+         const indiceDeAzulejo = celdaActual.opciones[0];
+         const reglasActuales = reglas[indiceDeAzulejo];
+         // print(reglasActuales);
+          image (
+          azulejos[indiceDeAzulejo],
+           x * ancho,
+           y * alto,
+           ancho,
+           alto
+           );
+//Monitorear UP
+          if (y > 0 ){
+            const indiceUP = x + (y-1) * RETICULA ; 
+            const celdaUP = celdas[indiceUP];
+            if(!celdaUP.colapsada){
+              const nuevasOpciones = []
+              for(let i= 0 ; i < celdaUP.opciones.length; i++){
+                if(
+                  reglasActuales['UP']= 
+                  reglas[celdaUP.opciones[i]]['DOWN']
+                  ) {
+                                
 
+                const celdaCompatible = celdaUP.opciones[i]
+                nuevasOpciones.push(celdaCompatible);
+                  }
+                celdaUP.opciones = nuevasOpciones;
+                print(nuevasOpciones);
+            
+            }
+            
+            }
+          }
+//Monitorear Right
+          if( x < RETICULA - 1 ){
+            const indiceRIGHT= x + 1 + y * RETICULA ;
+            const celdaRIGHT = celdas[indiceRIGHT];
+            if(!celdaRIGHT.colapsada){
+
+            }
+          }
+//Monitorear Down
+          if ( y < RETICULA - 1){
+            const indiceDOWN= x + (y + 1) * RETICULA ;
+            const celdaDOWN = celdas[indiceDOWN];
+            if(!celdaDOWN.colapsada){
+
+            }
+
+          }
+//Monitorear Left
+          if ( x > 0){
+            const indiceLEFT= x - 1 + y * RETICULA ;
+            const celdaLEFT = celdas[indiceLEFT];
+            if(!celdaLEFT.colapsada){
+
+            }
+          } else{
+            strokeWeight(6);
+            rect(x * ancho, y * alto, ancho, alto);
+            }
           }
         }
       }
